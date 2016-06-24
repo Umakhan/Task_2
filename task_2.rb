@@ -1,14 +1,24 @@
 require 'rubygems'
 require 'mechanize'
 
-a = Mechanize.new
+class ExchangeUSD
 
-page = a.get('http://www.raiffeisen.ru/ru/currency_rates/')
-	
-	b = gets
+	attr_reader   :dollar, :path, :page, :review_meta
+	attr_writer   :dollar
 
-path = 'div.switcher_view.cbr_view table.table.horizontal tbody tr td'
-review_meta = page.search(path)
-	
-	puts b.to_f*review_meta[3].text.to_f
-		
+	def initialize
+		@a = Mechanize.new
+		@path = 'div.switcher_view.cbr_view table.table.horizontal tbody tr td'
+	end
+
+	def parser
+		@page = @a.get('http://www.raiffeisen.ru/ru/currency_rates/')
+		@review_meta = @page.search(@path) 
+		@dollar.to_f*@review_meta[3].text.to_f
+	end
+end		
+
+exchange = ExchangeUSD.new
+exchange.dollar = gets
+puts exchange.parser
+
